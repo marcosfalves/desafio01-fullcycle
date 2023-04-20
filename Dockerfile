@@ -1,5 +1,10 @@
-FROM golang:1.20-alpine
+FROM golang:1.20.3 as build
 
-COPY fullcycle.go ./fullcycle.go
+COPY fullcycle.go /go/fullcycle.go
+WORKDIR /go
+RUN go build fullcycle.go
 
-ENTRYPOINT [ "go", "run",  "fullcycle.go"]
+FROM scratch
+COPY --from=build /go .
+
+CMD [ "./fullcycle" ]
